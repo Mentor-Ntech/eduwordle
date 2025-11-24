@@ -1,5 +1,8 @@
 import type { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox-viem";
+import "@nomicfoundation/hardhat-toolbox";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -15,19 +18,31 @@ const config: HardhatUserConfig = {
     // Celo Mainnet
     celo: {
       url: "https://forno.celo.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.PRIVATE_KEY 
+        ? [(process.env.PRIVATE_KEY.trim().startsWith("0x") 
+            ? process.env.PRIVATE_KEY.trim() 
+            : `0x${process.env.PRIVATE_KEY.trim()}`)]
+        : [],
       chainId: 42220,
     },
     // Celo Alfajores Testnet
     alfajores: {
       url: "https://alfajores-forno.celo-testnet.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.PRIVATE_KEY 
+        ? [(process.env.PRIVATE_KEY.trim().startsWith("0x") 
+            ? process.env.PRIVATE_KEY.trim() 
+            : `0x${process.env.PRIVATE_KEY.trim()}`)]
+        : [],
       chainId: 44787,
     },
     // Celo Sepolia Testnet
     sepolia: {
       url: "https://forno.celo-sepolia.celo-testnet.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.PRIVATE_KEY 
+        ? [(process.env.PRIVATE_KEY.trim().startsWith("0x") 
+            ? process.env.PRIVATE_KEY.trim() 
+            : `0x${process.env.PRIVATE_KEY.trim()}`)]
+        : [],
       chainId: 11142220,
     },
     // Local development

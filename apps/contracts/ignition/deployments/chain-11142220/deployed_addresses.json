@@ -1,0 +1,7 @@
+{
+  "EduWordleModule#EduWordle": "0x130efc67fBe2EC623B62Ef761d1d1C9fc0B073A9",
+  "EduWordleModule#Leaderboard": "0xFA7ff782aA9CC7c258C43919Fcca5eEB9E6000B8",
+  "MockCUSDModule#MockERC20": "0x644160A6e05D96fA84dc5525E1E5CC213D9F3a13",
+  "EduWordleWithMockCUSDModule#EduWordle": "0xB0796aDB7F853E804Bfc921AaFAeCd011ea0BD95",
+  "EduWordleWithMockCUSDModule#Leaderboard": "0x30dd0Ff90fA9e956964f8C033F8651Bf40A5Fc08"
+}

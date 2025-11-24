@@ -1,50 +1,64 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Zap } from "lucide-react";
+'use client'
 
-export default function Home() {
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAccount } from 'wagmi'
+import { LandingNav } from '@/components/landing/landing-nav'
+import { LandingHero } from '@/components/landing/landing-hero'
+import { LandingFeatures } from '@/components/landing/landing-features'
+import { LandingStats } from '@/components/landing/landing-stats'
+import { LandingFAQ } from '@/components/landing/landing-faq'
+import { LandingFooter } from '@/components/landing/landing-footer'
+
+function LandingPageContent() {
+  const router = useRouter()
+  const { isConnected } = useAccount()
+
+  // Redirect to dashboard when wallet is connected
+  useEffect(() => {
+    if (isConnected) {
+      router.push('/dashboard')
+    }
+  }, [isConnected, router])
+
+  // Don't render if connected (will redirect)
+  if (isConnected) {
+    return null
+  }
+
   return (
-<main className="flex-1">
-  {/* Hero Section */}
-  <section className="relative py-20 lg:py-32">
-    <div className="container px-4 mx-auto max-w-7xl">
-      <div className="text-center max-w-4xl mx-auto">
-        {/* Badge */}
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1 mb-8 text-sm font-medium bg-primary/10 text-primary rounded-full border border-primary/20"
-        >
-          <Zap className="h-4 w-4" />
-          Built on Celo
-        </div>
+    <main className="min-h-screen bg-background">
+      <LandingNav />
+      <LandingHero />
+      <LandingFeatures />
+      <LandingStats />
+      <LandingFAQ />
+      <LandingFooter />
+    </main>
+  )
+}
 
-        {/* Main Heading */}
-        <h1
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
-        >
-          Welcome to{" "}
-          <span className="text-primary">eduwordle-celo</span>
-        </h1>
+export default function LandingPage() {
+  const [mounted, setMounted] = useState(false)
 
-        {/* Subtitle */}
-        <p
-          className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
-        >
-          Start building your decentralized application on Celo. Fast and secure blockchain for everyone.
-        </p>
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
+  // During SSR, render without wallet hooks
+  if (!mounted) {
+    return (
+      <main className="min-h-screen bg-background">
+        <LandingNav />
+        <LandingHero />
+        <LandingFeatures />
+        <LandingStats />
+        <LandingFAQ />
+        <LandingFooter />
+      </main>
+    )
+  }
 
-        {/* CTA Buttons */}
-        <div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-        >
-          <Button size="lg" className="px-8 py-3 text-base font-medium">
-            Get Started
-          </Button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-  );
+  // After mount, render with wallet hooks
+  return <LandingPageContent />
 }

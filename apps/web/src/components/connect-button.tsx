@@ -5,18 +5,38 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export function WalletConnectButton() {
   const [mounted, setMounted] = useState(false)
+  const [wagmiReady, setWagmiReady] = useState(false)
 
   useEffect(() => {
     setMounted(true)
+    // Delay to ensure WagmiProvider is fully initialized
+    // Check multiple times to ensure provider is ready
+    const checkWagmi = () => {
+      try {
+        // Try to access window to ensure we're in browser
+        if (typeof window !== 'undefined') {
+          setWagmiReady(true)
+        }
+      } catch (e) {
+        // Retry after a delay
+        setTimeout(checkWagmi, 50)
+      }
+    }
+    const timer = setTimeout(checkWagmi, 200)
+    return () => clearTimeout(timer)
   }, [])
 
-  if (!mounted) {
+  if (!mounted || !wagmiReady) {
     return (
-      <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+      <button 
+        disabled
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+      >
         Connect Wallet
       </button>
     )
   }
+  
   return (
     <ConnectButton.Custom>
       {({

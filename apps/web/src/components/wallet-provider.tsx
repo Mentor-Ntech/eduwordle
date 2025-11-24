@@ -8,6 +8,7 @@ import { celo, celoAlfajores } from 'wagmi/chains'
 import { defineChain } from 'viem'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { http } from 'wagmi'
+import { WalletContextBridge } from '@/lib/wallet-context-bridge'
 
 // Define Celo Sepolia chain
 const celoSepolia = defineChain({
@@ -37,9 +38,13 @@ let config: any = null
 
 function getWagmiConfig() {
   if (!config) {
+    // Use a valid placeholder project ID if not provided
+    // This prevents 400 errors, but WalletConnect features may be limited
+    const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '00000000000000000000000000000000'
+    
     config = getDefaultConfig({
       appName: 'eduwordle-celo',
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'YOUR_PROJECT_ID',
+      projectId: projectId,
       chains: [celo, celoAlfajores, celoSepolia],
       transports: {
         [celo.id]: http(),
@@ -61,11 +66,15 @@ const queryClient = new QueryClient({
 })
 
 function WalletProviderInner({ children }: { children: React.ReactNode }) {
+  // Always render providers - Wagmi handles SSR internally with ssr: true
+  // This ensures WagmiProvider is always in the tree
   return (
     <WagmiProvider config={getWagmiConfig()}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          {children}
+          <WalletContextBridge>
+            {children}
+          </WalletContextBridge>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -76,13 +85,13 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      setMounted(true)
+    })
   }, [])
 
-  // Show children without wallet functionality during SSR
-  if (!mounted) {
-    return <>{children}</>
-  }
-
+  // Always render providers, but they handle SSR internally
+  // This ensures WagmiProvider is in the tree immediately
   return <WalletProviderInner>{children}</WalletProviderInner>
 }
