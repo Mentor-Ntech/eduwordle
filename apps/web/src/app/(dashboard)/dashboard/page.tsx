@@ -8,16 +8,78 @@ import { StreakBadge } from '@/components/streak-badge'
 import { useUserStats } from '@/hooks/use-user-stats'
 import { useAccount } from 'wagmi'
 import Link from 'next/link'
+import { useDailyWord } from '@/hooks/use-daily-word'
+import { useLeaderboard } from '@/hooks/use-leaderboard'
 
 export default function DashboardPage() {
   const { isConnected } = useAccount()
   const { rewardAmount, hasClaimed } = useUserStats()
+  const {
+    word: dailyWord,
+    date: dailyWordDate,
+    updatedAt: dailyWordUpdatedAt,
+    isLoading: isDailyWordLoading,
+    error: dailyWordError,
+  } = useDailyWord()
+  const {
+    isLeaderboardConnected,
+    hasAddressMismatch,
+    expectedLeaderboardAddress,
+    onChainLeaderboardAddress,
+  } = useLeaderboard(1)
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <StreakBadge />
         <QuickStatsGrid />
+        <div className="rounded-lg card-elevation bg-surface border border-primary/20 p-4 space-y-2">
+          <div className="flex justify-between items-center">
+            <h3 className="text-sm font-semibold text-foreground">Daily Automation</h3>
+            <span className="text-xs text-muted-foreground">
+              {dailyWordDate ? dailyWordDate : '—'}
+            </span>
+          </div>
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p>
+              Status:{' '}
+              {isDailyWordLoading ? (
+                <span className="text-muted-foreground">Loading…</span>
+              ) : dailyWordError ? (
+                <span className="text-warning-foreground">Failed to load daily word</span>
+              ) : (
+                <span className="text-success">Ready</span>
+              )}
+            </p>
+            <p>
+              Word:{' '}
+              {dailyWord ? (
+                <span className="font-semibold tracking-wide">{dailyWord}</span>
+              ) : (
+                '—'
+              )}
+            </p>
+            <p>
+              Updated:{' '}
+              {dailyWordUpdatedAt
+                ? new Date(dailyWordUpdatedAt).toLocaleString()
+                : '—'}
+            </p>
+            {!isLeaderboardConnected && (
+              <p className="text-warning-foreground">
+                Leaderboard not connected on-chain. Run automation or call{' '}
+                <code>setLeaderboardContract</code>.
+              </p>
+            )}
+            {hasAddressMismatch && (
+              <p className="text-warning-foreground">
+                Leaderboard mismatch: expected{' '}
+                <code>{expectedLeaderboardAddress}</code> but on-chain is{' '}
+                <code>{onChainLeaderboardAddress}</code>.
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       <MiniPayConnectionBanner />

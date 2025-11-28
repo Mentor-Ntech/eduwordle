@@ -1,0 +1,89 @@
+{
+  "common": {
+    "home": "Startseite",
+    "play": "Spielen",
+    "leaderboard": "Bestenliste",
+    "settings": "Einstellungen",
+    "connect": "Verbinden",
+    "disconnect": "Trennen",
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "close": "Schließen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Verwalten Sie Ihre Präferenzen und Ihr Konto",
+    "language": {
+      "title": "Sprache und Lokalisierung",
+      "preference": "Sprachpräferenz"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "inApp": "In-App-Benachrichtigungen",
+      "inAppDesc": "Erhalten Sie Benachrichtigungen über Spielergebnisse und Serien"
+    },
+    "stats": {
+      "title": "Ihre Statistiken",
+      "totalWins": "Gesamtsiege",
+      "currentStreak": "Aktuelle Serie",
+      "longestStreak": "Längste Serie",
+      "totalEarnings": "Gesamteinnahmen"
+    },
+    "account": {
+      "title": "Konto",
+      "walletConnection": "Wallet-Verbindung",
+      "walletConnectionDesc": "Aktueller Status und Adresse",
+      "connected": "Verbunden",
+      "walletAddress": "Wallet-Adresse",
+      "disconnectWallet": "Wallet Trennen"
+    },
+    "about": {
+      "title": "Über",
+      "version": "EduWordle v1.0.0",
+      "description": "Erbaut auf der Celo-Blockchain für transparente, sofortige Belohnungen",
+      "privacyPolicy": "Datenschutzrichtlinie",
+      "termsOfService": "Nutzungsbedingungen"
+    }
+  },
+  "minipay": {
+    "title": "MiniPay Wallet",
+    "connected": "Verbunden und verifiziert",
+    "walletAddress": "Wallet-Adresse",
+    "balance": "Guthaben",
+    "withdrawRewards": "Belohnungen Abheben",
+    "addFunds": "Guthaben Aufladen"
+  },
+  "game": {
+    "title": "Tägliche Herausforderung",
+    "submit": "Einreichen",
+    "hint": "Hinweis",
+    "buyHint": "Hinweis Kaufen",
+    "correct": "Richtig!",
+    "incorrect": "Falsch",
+    "tryAgain": "Erneut Versuchen",
+    "gameOver": "Spiel Beendet",
+    "youWon": "Sie haben Gewonnen!",
+    "reward": "Belohnung"
+  },
+  "leaderboard": {
+    "title": "Bestenliste",
+    "rank": "Rang",
+    "player": "Spieler",
+    "score": "Punkte",
+    "points": "Punkte"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen",
+    "dailyChallenge": "Tägliche Herausforderung",
+    "yourStats": "Ihre Statistiken",
+    "totalGames": "Gesamtspiele",
+    "wins": "Siege",
+    "streak": "Serie",
+    "totalEarnings": "Gesamteinnahmen"
+  }
+}
+

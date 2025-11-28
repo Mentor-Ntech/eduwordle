@@ -30,14 +30,25 @@ export function getAvatarFromAddress(address: string): string {
 
 // Transform contract leaderboard data to UI format
 export function transformLeaderboardData(
-  entries: Array<{ rank: number; address: string; wins: number; streak: number }>,
+  entries: Array<{ rank: number; address: string; wins: number; streak: number; totalRewards?: string }>,
   currentUserAddress?: string
 ): LeaderboardEntry[] {
   return entries.map((entry) => ({
     rank: entry.rank,
     username: formatAddressAsUsername(entry.address, currentUserAddress),
     avatar: getAvatarFromAddress(entry.address),
-    points: entry.wins * 50, // Approximate points (could be fetched from contract if available)
+    points: (() => {
+      if (entry.totalRewards === undefined || entry.totalRewards === null) {
+        return entry.wins * 50
+      }
+
+      const rewardValue = Number(entry.totalRewards)
+      if (Number.isNaN(rewardValue)) {
+        return entry.wins * 50
+      }
+
+      return Number(rewardValue.toFixed(2))
+    })(),
     streak: entry.streak,
     wins: entry.wins,
     isCurrentUser: currentUserAddress?.toLowerCase() === entry.address.toLowerCase(),

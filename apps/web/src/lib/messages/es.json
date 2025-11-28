@@ -1,0 +1,89 @@
+{
+  "common": {
+    "home": "Inicio",
+    "play": "Jugar",
+    "leaderboard": "Clasificación",
+    "settings": "Configuración",
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra tus preferencias y cuenta",
+    "language": {
+      "title": "Idioma y Localización",
+      "preference": "Preferencia de Idioma"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "inApp": "Notificaciones en la Aplicación",
+      "inAppDesc": "Recibe notificaciones sobre resultados del juego y rachas"
+    },
+    "stats": {
+      "title": "Tus Estadísticas",
+      "totalWins": "Victorias Totales",
+      "currentStreak": "Racha Actual",
+      "longestStreak": "Racha Más Larga",
+      "totalEarnings": "Ganancias Totales"
+    },
+    "account": {
+      "title": "Cuenta",
+      "walletConnection": "Conexión de Billetera",
+      "walletConnectionDesc": "Estado actual y dirección",
+      "connected": "Conectado",
+      "walletAddress": "Dirección de Billetera",
+      "disconnectWallet": "Desconectar Billetera"
+    },
+    "about": {
+      "title": "Acerca de",
+      "version": "EduWordle v1.0.0",
+      "description": "Construido en la blockchain de Celo para recompensas transparentes e instantáneas",
+      "privacyPolicy": "Política de Privacidad",
+      "termsOfService": "Términos de Servicio"
+    }
+  },
+  "minipay": {
+    "title": "Billetera MiniPay",
+    "connected": "Conectada y verificada",
+    "walletAddress": "Dirección de Billetera",
+    "balance": "Saldo",
+    "withdrawRewards": "Retirar Recompensas",
+    "addFunds": "Agregar Fondos"
+  },
+  "game": {
+    "title": "Desafío Diario",
+    "submit": "Enviar",
+    "hint": "Pista",
+    "buyHint": "Comprar Pista",
+    "correct": "¡Correcto!",
+    "incorrect": "Incorrecto",
+    "tryAgain": "Intentar de Nuevo",
+    "gameOver": "Juego Terminado",
+    "youWon": "¡Ganaste!",
+    "reward": "Recompensa"
+  },
+  "leaderboard": {
+    "title": "Clasificación",
+    "rank": "Rango",
+    "player": "Jugador",
+    "score": "Puntuación",
+    "points": "Puntos"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido",
+    "dailyChallenge": "Desafío Diario",
+    "yourStats": "Tus Estadísticas",
+    "totalGames": "Juegos Totales",
+    "wins": "Victorias",
+    "streak": "Racha",
+    "totalEarnings": "Ganancias Totales"
+  }
+}
+

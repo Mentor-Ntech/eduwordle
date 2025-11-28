@@ -1,0 +1,12 @@
+# date,word
+# Keep dates in UTC (YYYY-MM-DD) and words in plain text.
+# The automation script will hash the word for you.
+2025-11-24,REACT
+2025-11-25,BLOCK
+2025-11-26,CHAIN
+2025-11-27,TOKEN
+2025-11-28,LEARN
+
+
+
+

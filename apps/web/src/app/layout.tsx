@@ -3,6 +3,7 @@ import "./globals.css"
 import { WalletProvider } from '@/components/wallet-provider'
 import { UserProvider } from '@/lib/user-context'
 import { SettingsProvider } from '@/lib/settings-context'
+import { LangAttribute } from '@/components/lang-attribute'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -41,6 +42,7 @@ export default function RootLayout({
         <WalletProvider>
           <UserProvider>
             <SettingsProvider>
+              <LangAttribute />
               {children}
             </SettingsProvider>
           </UserProvider>

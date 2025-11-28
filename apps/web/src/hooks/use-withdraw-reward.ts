@@ -43,18 +43,24 @@ export function useWithdrawReward() {
     setIsWithdrawing(true)
 
     try {
-      console.log('🟩 Calling token transfer', { tokenAddress, to, amountInWei: amountInWei.toString() })
       const amountInWei = parseUnits(amount, 18)
+      console.log('🟩 Calling token transfer', { tokenAddress, to, amount, amountInWei: amountInWei.toString() })
+      
+      // writeContract doesn't return a promise, it triggers the write
+      // The status is tracked via isPending, txHash, and error
       writeContract({
         address: tokenAddress,
         abi: IERC20ABI,
         functionName: 'transfer',
         args: [to, amountInWei],
       })
-    } catch (error) {
+      
+      // Don't set isWithdrawing to false here - let the useEffect handle it
+      // The transaction is now submitted, wait for confirmation
+    } catch (error: any) {
       console.error('🟥 withdraw error', error)
       setIsWithdrawing(false)
-      throw error
+      throw new Error(error?.message || 'Failed to initiate withdrawal transaction')
     }
   }
 
@@ -66,9 +72,25 @@ export function useWithdrawReward() {
 
   useEffect(() => {
     if (writeError) {
+      console.error('🟥 Write error:', writeError)
       setIsWithdrawing(false)
     }
   }, [writeError])
+
+  // Log transaction hash when it appears
+  useEffect(() => {
+    if (txHash) {
+      console.log('✅ Transaction hash received:', txHash)
+      console.log('   Transaction submitted successfully! Waiting for confirmation...')
+    }
+  }, [txHash])
+
+  // Log when transaction is confirmed
+  useEffect(() => {
+    if (isConfirmed) {
+      console.log('🎉 Withdrawal transaction confirmed!')
+    }
+  }, [isConfirmed])
 
   return {
     withdraw,

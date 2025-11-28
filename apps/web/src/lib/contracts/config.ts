@@ -5,6 +5,8 @@
  * Update these addresses after deploying contracts to each network.
  */
 
+export const TARGET_CHAIN_ID = Number(process.env.NEXT_PUBLIC_TARGET_CHAIN_ID ?? '11142220') // Default: Celo Sepolia
+
 // cUSD token addresses for different Celo networks
 export const CUSD_ADDRESSES = {
   celo: '0x765DE816845861e75A25fCA122bb6898B8B1282a' as `0x${string}`,
@@ -42,9 +44,17 @@ export function getContractAddresses(chainId: number) {
     case 11142220: // Celo Sepolia Testnet
       return CONTRACT_ADDRESSES.sepolia
     default:
-      // Default to Sepolia for development
+      // Default to Sepolia for development / fallback
       return CONTRACT_ADDRESSES.sepolia
   }
+}
+
+export function getActiveChainId(chainId?: number) {
+  return chainId ?? TARGET_CHAIN_ID
+}
+
+export function isSupportedChainId(chainId?: number) {
+  return getActiveChainId(chainId) === TARGET_CHAIN_ID
 }
 
 // Get cUSD address for a specific chain ID

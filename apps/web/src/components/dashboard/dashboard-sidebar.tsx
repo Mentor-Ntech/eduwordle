@@ -4,11 +4,13 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWallet } from '@/lib/wallet-context'
+import { useTranslations } from '@/lib/use-translations'
 import { EduWordleLogo } from '@/components/brand/eduwordle-logo'
 
 export function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const { walletAddress, disconnectWallet } = useWallet()
+  const { t } = useTranslations()
   const router = useRouter()
 
   const handleDisconnect = () => {
@@ -46,7 +48,7 @@ export function DashboardSidebar() {
           {walletAddress && (
             <div className="mb-6 p-4 rounded-lg bg-background border border-primary/20">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                Connected Wallet
+                {t('settings.account.walletAddress')}
               </p>
               <p className="text-sm font-mono text-foreground">{truncateAddress(walletAddress)}</p>
             </div>
@@ -61,28 +63,28 @@ export function DashboardSidebar() {
               className="block px-4 py-3 rounded-lg hover:bg-background transition-colors text-foreground"
               onClick={() => setIsOpen(false)}
             >
-              Dashboard
+              {t('dashboard.title')}
             </Link>
             <Link
               href="/play"
               className="block px-4 py-3 rounded-lg hover:bg-background transition-colors text-foreground"
               onClick={() => setIsOpen(false)}
             >
-              Play Game
+              {t('common.play')}
             </Link>
             <Link
               href="/leaderboard"
               className="block px-4 py-3 rounded-lg hover:bg-background transition-colors text-foreground"
               onClick={() => setIsOpen(false)}
             >
-              Leaderboard
+              {t('common.leaderboard')}
             </Link>
             <Link
               href="/settings"
               className="block px-4 py-3 rounded-lg hover:bg-background transition-colors text-foreground"
               onClick={() => setIsOpen(false)}
             >
-              Settings
+              {t('common.settings')}
             </Link>
           </div>
 
@@ -91,7 +93,7 @@ export function DashboardSidebar() {
               onClick={handleDisconnect}
               className="w-full px-4 py-3 rounded-lg bg-error/10 text-error font-medium hover:bg-error/20 transition-colors"
             >
-              Disconnect Wallet
+              {t('settings.account.disconnectWallet')}
             </button>
           </div>
         </div>

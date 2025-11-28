@@ -57,10 +57,30 @@ function WalletContextBridgeInner({ children }: { children: React.ReactNode }) {
   
   const cUSDAddress = chainId ? cUSD_ADDRESSES[chainId] : undefined
   
-  const { data: balanceData } = useBalance({
+  const { data: balanceData, refetch: refetchBalance } = useBalance({
     address: address,
     token: cUSDAddress,
+    query: {
+      enabled: !!address && !!chainId, // Only fetch when connected and chainId is available
+      refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
+      refetchInterval: 10000, // Refetch every 10 seconds to keep balance updated
+      staleTime: 0, // Always consider data stale to force fresh fetches
+    },
   })
+  
+  // Log balance for debugging
+  useEffect(() => {
+    if (balanceData) {
+      console.log('💰 Wallet context balance from blockchain:', {
+        value: balanceData.value.toString(),
+        decimals: balanceData.decimals,
+        formatted: balanceData.formatted,
+        symbol: balanceData.symbol,
+        tokenAddress: cUSDAddress,
+        chainId,
+      })
+    }
+  }, [balanceData, cUSDAddress, chainId])
   const { disconnect } = useDisconnect()
   const { connect, connectors, isPending } = useConnect()
   const [isConnecting, setIsConnecting] = useState(false)

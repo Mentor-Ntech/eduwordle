@@ -13,7 +13,16 @@
     "deploy:celo": "hardhat ignition deploy ignition/modules/EduWordle.ts --network celo",
     "verify": "hardhat verify",
     "clean": "hardhat clean",
-    "typechain": "hardhat typechain"
+    "typechain": "hardhat typechain",
+    "daily": "node run-daily-cycle.js",
+    "words": "node manage-words.js",
+    "words:add": "node manage-words.js add",
+    "words:list": "node manage-words.js list",
+    "words:generate": "node manage-words.js generate",
+    "words:fill": "node manage-words.js fill-gaps",
+    "words:validate": "node manage-words.js validate",
+    "verify:leaderboard": "node verify-leaderboard.js",
+    "stats:sync": "node sync-player-stats.js"
   },
   "keywords": [
     "hardhat",
@@ -49,6 +58,7 @@
     "viem": "^2.0.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.4.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "@supabase/supabase-js": "^2.45.0"
   }
 }

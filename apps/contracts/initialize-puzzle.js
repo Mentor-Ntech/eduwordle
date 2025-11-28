@@ -23,8 +23,8 @@ const EDUWORDLE_ABI = [
   "function owner() external view returns (address)"
 ];
 
-// Contract address (from deployment)
-const CONTRACT_ADDRESS = '0x130efc67fBe2EC623B62Ef761d1d1C9fc0B073A9';
+// Contract address (from deployment) - use the one from .env.local
+const CONTRACT_ADDRESS = process.env.EDUWORDLE_ADDRESS || '0xB0796aDB7F853E804Bfc921AaFAeCd011ea0BD95';
 
 // Network configuration
 const RPC_URL = 'https://forno.celo-sepolia.celo-testnet.org';

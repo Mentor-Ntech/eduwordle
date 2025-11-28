@@ -2,7 +2,7 @@
 
 import { useAccount, useReadContract } from 'wagmi'
 import { useChainId } from 'wagmi'
-import { getContractAddresses } from '@/lib/contracts/config'
+import { getContractAddresses, getActiveChainId } from '@/lib/contracts/config'
 import EduWordleABI from '@/lib/contracts/EduWordle.json'
 import { formatUnits } from 'viem'
 import { type Address } from 'viem'
@@ -13,9 +13,12 @@ import { type Address } from 'viem'
  */
 export function useUserStats() {
   const { address, isConnected } = useAccount()
-  const chainId = useChainId()
-  const contracts = getContractAddresses(chainId)
+  const walletChainId = useChainId()
+  const activeChainId = getActiveChainId(walletChainId)
+  const contracts = getContractAddresses(activeChainId)
   const contractAddress = contracts.eduWordle as Address
+  const isContractConfigured = contractAddress && contractAddress !== '0x0000000000000000000000000000000000000000'
+  const shouldQuery = !!address && isConnected && isContractConfigured
 
   // Fetch user streak
   const { data: streak, refetch: refetchStreak } = useReadContract({
@@ -23,9 +26,11 @@ export function useUserStats() {
     abi: EduWordleABI,
     functionName: 'getUserStreak',
     args: address ? [address as Address] : undefined,
+    chainId: activeChainId,
     query: {
-      enabled: !!address && isConnected,
+      enabled: shouldQuery,
       refetchInterval: 30000, // Refetch every 30 seconds
+      refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
     },
   })
 
@@ -35,9 +40,11 @@ export function useUserStats() {
     abi: EduWordleABI,
     functionName: 'hasUserClaimed',
     args: address ? [address as Address] : undefined,
+    chainId: activeChainId,
     query: {
-      enabled: !!address && isConnected,
+      enabled: shouldQuery,
       refetchInterval: 30000,
+      refetchOnWindowFocus: false,
     },
   })
 
@@ -47,9 +54,11 @@ export function useUserStats() {
     abi: EduWordleABI,
     functionName: 'getHintsPurchased',
     args: address ? [address as Address] : undefined,
+    chainId: activeChainId,
     query: {
-      enabled: !!address && isConnected,
+      enabled: shouldQuery,
       refetchInterval: 30000,
+      refetchOnWindowFocus: false,
     },
   })
 
@@ -59,9 +68,11 @@ export function useUserStats() {
     abi: EduWordleABI,
     functionName: 'getRewardAmount',
     args: address ? [address as Address] : undefined,
+    chainId: activeChainId,
     query: {
-      enabled: !!address && isConnected,
+      enabled: shouldQuery,
       refetchInterval: 30000,
+      refetchOnWindowFocus: false,
     },
   })
 
@@ -84,7 +95,7 @@ export function useUserStats() {
     hintsPurchased: hintsPurchased ? Number(hintsPurchased) : 0,
     rewardAmount: formattedRewardAmount,
     rawRewardAmount: rewardAmount as bigint | undefined,
-    isLoading: !address || !isConnected,
+    isLoading: !shouldQuery,
     refetch: refetchAll,
   }
 }

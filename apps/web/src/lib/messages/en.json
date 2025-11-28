@@ -1,0 +1,89 @@
+{
+  "common": {
+    "home": "Home",
+    "play": "Play",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account",
+    "language": {
+      "title": "Language & Localization",
+      "preference": "Language Preference"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "inApp": "In-App Notifications",
+      "inAppDesc": "Get notified about game results and streaks"
+    },
+    "stats": {
+      "title": "Your Stats",
+      "totalWins": "Total Wins",
+      "currentStreak": "Current Streak",
+      "longestStreak": "Longest Streak",
+      "totalEarnings": "Total Earnings"
+    },
+    "account": {
+      "title": "Account",
+      "walletConnection": "Wallet Connection",
+      "walletConnectionDesc": "Current status and address",
+      "connected": "Connected",
+      "walletAddress": "Wallet Address",
+      "disconnectWallet": "Disconnect Wallet"
+    },
+    "about": {
+      "title": "About",
+      "version": "EduWordle v1.0.0",
+      "description": "Built on Celo blockchain for transparent, instant rewards",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service"
+    }
+  },
+  "minipay": {
+    "title": "MiniPay Wallet",
+    "connected": "Connected and verified",
+    "walletAddress": "Wallet Address",
+    "balance": "Balance",
+    "withdrawRewards": "Withdraw Rewards",
+    "addFunds": "Add Funds"
+  },
+  "game": {
+    "title": "Daily Challenge",
+    "submit": "Submit",
+    "hint": "Hint",
+    "buyHint": "Buy Hint",
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "tryAgain": "Try Again",
+    "gameOver": "Game Over",
+    "youWon": "You Won!",
+    "reward": "Reward"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "player": "Player",
+    "score": "Score",
+    "points": "Points"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "dailyChallenge": "Daily Challenge",
+    "yourStats": "Your Stats",
+    "totalGames": "Total Games",
+    "wins": "Wins",
+    "streak": "Streak",
+    "totalEarnings": "Total Earnings"
+  }
+}
+

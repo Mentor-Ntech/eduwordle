@@ -14,6 +14,10 @@ build/
 .env.test.local
 .env.production.local
 
+# Generated automation artifacts
+apps/web/public/daily-word.json
+apps/contracts/.puzzle-sync-state.json
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

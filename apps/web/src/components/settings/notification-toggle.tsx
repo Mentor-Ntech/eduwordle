@@ -1,16 +1,18 @@
 'use client'
 
 import { useSettings } from '@/lib/settings-context'
+import { useTranslations } from '@/lib/use-translations'
 
 export function NotificationToggle() {
   const { settings, updateSetting } = useSettings()
+  const { t } = useTranslations()
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between py-3">
         <div>
-          <label className="text-foreground font-medium cursor-pointer">In-App Notifications</label>
-          <p className="text-xs text-muted-foreground mt-1">Get notified about game results and streaks</p>
+          <label className="text-foreground font-medium cursor-pointer">{t('settings.notifications.inApp')}</label>
+          <p className="text-xs text-muted-foreground mt-1">{t('settings.notifications.inAppDesc')}</p>
         </div>
         <button
           onClick={() => updateSetting('notificationsEnabled', !settings.notificationsEnabled)}

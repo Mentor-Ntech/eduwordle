@@ -4,11 +4,13 @@ interface GameStatusProps {
   status: 'won' | 'lost'
   word: string
   guessCount: number
-  onPlayAgain: () => void
+  onPlayAgain?: () => void
+  canReplay?: boolean
 }
 
-export function GameStatus({ status, word, guessCount, onPlayAgain }: GameStatusProps) {
+export function GameStatus({ status, word, guessCount, onPlayAgain, canReplay = true }: GameStatusProps) {
   const isWon = status === 'won'
+  const showReplayButton = canReplay && typeof onPlayAgain === 'function'
 
   return (
     <div className="card-elevation p-8 rounded-lg bg-surface text-center space-y-6">
@@ -25,19 +27,20 @@ export function GameStatus({ status, word, guessCount, onPlayAgain }: GameStatus
         </p>
       </div>
 
-      {isWon && (
-        <div className="bg-primary/10 rounded-lg p-4">
-          <p className="text-2xl font-bold text-primary">+50 cUSD</p>
-          <p className="text-sm text-muted-foreground">Added to your wallet</p>
+      {/* Reward info is shown in the RewardClaimModal, not here */}
+
+      {showReplayButton ? (
+        <button
+          onClick={onPlayAgain}
+          className="w-full h-11 px-6 bg-primary text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+        >
+          {isWon ? 'Play Tomorrow' : 'Try Again'}
+        </button>
+      ) : (
+        <div className="text-sm text-muted-foreground">
+          Come back tomorrow for a new puzzle.
         </div>
       )}
-
-      <button
-        onClick={onPlayAgain}
-        className="w-full h-11 px-6 bg-primary text-white font-semibold rounded-lg hover:shadow-lg transition-all"
-      >
-        {isWon ? 'Play Tomorrow' : 'Try Again'}
-      </button>
     </div>
   )
 }

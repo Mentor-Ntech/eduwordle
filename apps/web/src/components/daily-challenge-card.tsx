@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { ArrowRightIcon } from '@/components/icons/arrow-right'
 import { useReadContract, useChainId } from 'wagmi'
 import { getContractAddresses } from '@/lib/contracts/config'
@@ -31,7 +32,23 @@ export function DailyChallengeCard() {
   })
   
   const { streak, hasClaimed } = useUserStats()
-  const { isInitialized, totalSolversToday } = useDailyPuzzle()
+  const {
+    isInitialized,
+    totalSolversToday,
+    isLoading: isPuzzleLoading,
+    isSupportedChain,
+    isStalePuzzle,
+    lastInitializedDate,
+  } = useDailyPuzzle()
+
+  const lastInitializedDisplay = useMemo(() => {
+    if (!lastInitializedDate) return null
+    return lastInitializedDate.toLocaleString('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'UTC',
+    })
+  }, [lastInitializedDate])
   
   // Calculate reward amounts
   const baseRewardAmount = baseReward ? parseFloat(formatUnits(baseReward as bigint, 18)) : 0
@@ -53,10 +70,22 @@ export function DailyChallengeCard() {
         </div>
         
         <p className="text-lg text-muted-foreground mb-6 max-w-md">
-          {hasClaimed && isConnected ? (
+          {!isSupportedChain ? (
+            <>Please switch your wallet to Celo Sepolia to view today's puzzle and rewards.</>
+          ) : hasClaimed && isConnected ? (
             <>You've already completed today's puzzle! Come back tomorrow for a new challenge.</>
+          ) : isPuzzleLoading ? (
+            <>Checking today's puzzle status...</>
           ) : isInitialized ? (
             <>Complete today's word puzzle to earn <strong>{baseRewardAmount.toFixed(2)} cUSD</strong> and maintain your winning streak.</>
+          ) : isStalePuzzle ? (
+            <>
+              Today's puzzle hasn't been published yet. The last on-chain word went live{' '}
+              <span className="font-semibold text-foreground">
+                {lastInitializedDisplay ?? 'recently'}
+              </span>{' '}
+              (UTC). Please check back once the admin reinitializes the contract.
+            </>
           ) : (
             <>Puzzle not initialized yet. Please check back later.</>
           )}
@@ -88,9 +117,15 @@ export function DailyChallengeCard() {
         <Link href="/play">
           <button 
             className="inline-flex items-center gap-2 h-11 px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!isInitialized || (hasClaimed && isConnected)}
+            disabled={isPuzzleLoading || !isSupportedChain || !isInitialized || (hasClaimed && isConnected)}
           >
-            {hasClaimed && isConnected ? 'Already Completed' : 'Start Playing'}
+            {hasClaimed && isConnected
+              ? 'Already Completed'
+              : !isSupportedChain
+                ? 'Wrong Network'
+              : isPuzzleLoading
+                ? 'Checking Status...'
+                : 'Start Playing'}
             <ArrowRightIcon className="w-5 h-5" />
           </button>
         </Link>

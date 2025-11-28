@@ -1,9 +1,11 @@
 'use client'
 
 import { useSettings } from '@/lib/settings-context'
+import { useTranslations } from '@/lib/use-translations'
 
 export function LanguagePicker() {
   const { settings, updateSetting } = useSettings()
+  const { t } = useTranslations()
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -15,7 +17,7 @@ export function LanguagePicker() {
 
   return (
     <div>
-      <label className="block text-sm font-semibold mb-4 text-foreground">Language Preference</label>
+      <label className="block text-sm font-semibold mb-4 text-foreground">{t('settings.language.preference')}</label>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {languages.map(lang => (
           <button

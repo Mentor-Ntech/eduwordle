@@ -9,6 +9,10 @@ Create a `.env.local` file in `apps/web/` with the following variables:
 # Get yours from: https://cloud.walletconnect.com/
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
 
+# Target network (chain ID)
+# Default is 11142220 (Celo Sepolia). Change only if you deploy elsewhere.
+NEXT_PUBLIC_TARGET_CHAIN_ID=11142220
+
 # Contract Addresses (Required after deployment)
 # Update these after deploying contracts to your target network
 NEXT_PUBLIC_EDUWORDLE_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000000
