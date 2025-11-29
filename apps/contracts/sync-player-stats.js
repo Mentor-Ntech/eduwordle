@@ -9,9 +9,9 @@
  *  - EVENT_STATE_FILE (optional, defaults to .puzzle-sync-state.json)
  */
 
-require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '.env') })
 const { ethers } = require('ethers')
 const { createClient } = require('@supabase/supabase-js')
 const eduWordleArtifact = require('./artifacts/contracts/EduWordle.sol/EduWordle.json')

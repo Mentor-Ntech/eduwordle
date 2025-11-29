@@ -13,6 +13,10 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+
+# Supabase
+apps/contracts/supabase-setup.sql
 
 # Generated automation artifacts
 apps/web/public/daily-word.json
@@ -104,3 +108,22 @@ Thumbs.db
 .turbo
 .env.local
 .env
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Contract artifacts and cache (should be built, not committed)
+apps/contracts/artifacts/
+apps/contracts/cache/
+apps/contracts/typechain-types/
+apps/contracts/ignition/deployments/chain-31337/
+
+# Test and temporary files
+*.test.js
+test-game-flow.js
+
+# Backup files
+*.backup
+*.bak

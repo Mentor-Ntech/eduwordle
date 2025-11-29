@@ -41,6 +41,8 @@ export default function LeaderboardPage() {
 
   // Auto-refresh when page becomes visible (user switches back to tab)
   useEffect(() => {
+    if (!isContractDeployed) return
+    
     const handleVisibilityChange = () => {
       if (!document.hidden && isContractDeployed) {
         refetch()
@@ -48,21 +50,6 @@ export default function LeaderboardPage() {
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [refetch, isContractDeployed])
-
-  // Aggressive refetch on mount and periodically
-  useEffect(() => {
-    if (!isContractDeployed) return
-    
-    // Refetch immediately on mount
-    refetch()
-    
-    // Then refetch every 5 seconds to ensure updates are caught quickly
-    const interval = setInterval(() => {
-      refetch()
-    }, 5000)
-    
-    return () => clearInterval(interval)
   }, [refetch, isContractDeployed])
 
   const handleRefresh = async () => {

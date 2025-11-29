@@ -63,7 +63,7 @@ function WalletContextBridgeInner({ children }: { children: React.ReactNode }) {
     query: {
       enabled: !!address && !!chainId, // Only fetch when connected and chainId is available
       refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
-      refetchInterval: 10000, // Refetch every 10 seconds to keep balance updated
+      refetchInterval: 30000, // Refetch every 30 seconds to keep balance updated
       staleTime: 0, // Always consider data stale to force fresh fetches
     },
   })

@@ -7,7 +7,7 @@ import LeaderboardABI from '@/lib/contracts/Leaderboard.json'
 import EduWordleABI from '@/lib/contracts/EduWordle.json'
 import { formatUnits } from 'viem'
 import { type Address, type Abi } from 'viem'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 
 export interface LeaderboardEntry {
   rank: number
@@ -68,8 +68,8 @@ export function useLeaderboard(limit: number = 10) {
     chainId: activeChainId,
     query: {
       enabled: isContractDeployed,
-      refetchInterval: 10000, // Refetch every 10 seconds (more frequent)
-      staleTime: 5000, // Consider data stale after 5 seconds
+      refetchInterval: 30000, // Refetch every 30 seconds
+      staleTime: 15000, // Consider data stale after 15 seconds
       refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
       refetchOnMount: true, // Always refetch on mount to get latest data
     },
@@ -84,8 +84,8 @@ export function useLeaderboard(limit: number = 10) {
     chainId: activeChainId,
     query: {
       enabled: isContractDeployed,
-      refetchInterval: 10000, // Refetch every 10 seconds (more frequent)
-      staleTime: 5000, // Consider data stale after 5 seconds
+      refetchInterval: 30000, // Refetch every 30 seconds
+      staleTime: 15000, // Consider data stale after 15 seconds
       refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
       refetchOnMount: true, // Always refetch on mount to get latest data
     },
@@ -149,8 +149,8 @@ export function useLeaderboard(limit: number = 10) {
     })),
     query: {
       enabled: isContractDeployed && leaderboardAddresses.length > 0,
-      refetchInterval: 10000, // Refetch every 10 seconds (more frequent)
-      staleTime: 5000, // Consider data stale after 5 seconds
+      refetchInterval: 30000, // Refetch every 30 seconds
+      staleTime: 15000, // Consider data stale after 15 seconds
       refetchOnWindowFocus: false, // Don't refetch on focus to maintain connection
       refetchOnMount: true, // Always refetch on mount
     },
@@ -285,12 +285,12 @@ export function useLeaderboard(limit: number = 10) {
   const streakEntries =
     contractStreakEntries.length > 0 ? contractStreakEntries : supabaseStreak
 
-  // Refetch all leaderboard data
-  const refetchAll = () => {
+  // Refetch all leaderboard data - memoized to prevent infinite loops
+  const refetchAll = useCallback(() => {
     refetchWins()
     refetchStreak()
     refetchPlayerStats()
-  }
+  }, [refetchWins, refetchStreak, refetchPlayerStats])
 
   // Determine loading state:
   // - Loading if contract not deployed

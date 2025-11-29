@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { useUserStats as useContractUserStats } from '@/hooks/use-user-stats'
 import { useLeaderboard } from '@/hooks/use-leaderboard'
 import { useAccount } from 'wagmi'
@@ -43,6 +43,33 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const cacheKey = address ? `eduwordle:stats:${address.toLowerCase()}` : null
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // Extract primitive values from currentUserStats to prevent infinite loops
+  // This ensures we only depend on actual values, not object references
+  const userStatsValues = useMemo(() => {
+    if (!currentUserStats) {
+      return {
+        totalWins: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        totalRewardsEarned: '0',
+      }
+    }
+    return {
+      totalWins: currentUserStats.totalWins ?? 0,
+      currentStreak: currentUserStats.currentStreak ?? 0,
+      longestStreak: currentUserStats.longestStreak ?? 0,
+      totalRewardsEarned: currentUserStats.totalRewardsEarned ?? '0',
+    }
+  }, [
+    currentUserStats?.totalWins,
+    currentUserStats?.currentStreak,
+    currentUserStats?.longestStreak,
+    currentUserStats?.totalRewardsEarned,
+  ])
+
+  // Extract streak value to prevent object reference changes
+  const contractStreak = contractStats.streak || 0
 
   useEffect(() => {
     if (!cacheKey || typeof window === 'undefined') return
@@ -115,15 +142,18 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cacheKey, address, supabaseUrl, supabaseAnonKey, isConnected])
 
+  // Use ref to track previous values and prevent unnecessary updates
+  const prevStatsRef = useRef<string>('')
+
   useEffect(() => {
     if (!cacheKey || typeof window === 'undefined') return
     if (!isConnected || !address) return
 
-    const streak = contractStats.streak || 0
-    const totalWins = currentUserStats?.totalWins ?? 0
-    const currentStreak = currentUserStats?.currentStreak ?? streak
-    const longestStreak = currentUserStats?.longestStreak ?? currentStreak
-    const totalRewardsValue = Number(currentUserStats?.totalRewardsEarned ?? 0)
+    const streak = contractStreak
+    const totalWins = userStatsValues.totalWins
+    const currentStreak = userStatsValues.currentStreak || streak
+    const longestStreak = userStatsValues.longestStreak || currentStreak
+    const totalRewardsValue = Number(userStatsValues.totalRewardsEarned ?? 0)
     const formattedRewards = Number.isNaN(totalRewardsValue)
       ? '0.00'
       : totalRewardsValue.toLocaleString('en-US', {
@@ -139,6 +169,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       totalEarnings: formattedRewards,
     }
 
+    // Create a string key to compare if stats actually changed
+    const statsKey = `${streak}-${totalWins}-${currentStreak}-${longestStreak}-${formattedRewards}`
+    
+    // Only update if values actually changed
+    if (prevStatsRef.current === statsKey) {
+      return
+    }
+    prevStatsRef.current = statsKey
+
     try {
       window.localStorage.setItem(
         cacheKey,
@@ -152,19 +191,28 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.warn('Failed to cache stats', error)
     }
-  }, [cacheKey, contractStats.streak, currentUserStats, isConnected, address])
+  }, [
+    cacheKey,
+    contractStreak,
+    userStatsValues.totalWins,
+    userStatsValues.currentStreak,
+    userStatsValues.longestStreak,
+    userStatsValues.totalRewardsEarned,
+    isConnected,
+    address,
+  ])
 
   const stats: UserStats = useMemo(() => {
     if (!isConnected || !address) {
       return cachedStats
     }
 
-    const streak = contractStats.streak || cachedStats.streak || 0
-    const totalWins = currentUserStats?.totalWins ?? cachedStats.totalWins ?? 0
-    const currentStreak = currentUserStats?.currentStreak ?? cachedStats.currentStreak ?? streak
+    const streak = contractStreak || cachedStats.streak || 0
+    const totalWins = userStatsValues.totalWins ?? cachedStats.totalWins ?? 0
+    const currentStreak = userStatsValues.currentStreak ?? cachedStats.currentStreak ?? streak
     const longestStreak =
-      currentUserStats?.longestStreak ?? cachedStats.longestStreak ?? currentStreak
-    const totalRewardsValue = Number(currentUserStats?.totalRewardsEarned ?? cachedStats.totalEarnings ?? 0)
+      userStatsValues.longestStreak ?? cachedStats.longestStreak ?? currentStreak
+    const totalRewardsValue = Number(userStatsValues.totalRewardsEarned ?? cachedStats.totalEarnings ?? 0)
     const formattedRewards = Number.isNaN(totalRewardsValue)
       ? cachedStats.totalEarnings
       : totalRewardsValue.toLocaleString('en-US', {
@@ -179,12 +227,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       totalWins,
       totalEarnings: formattedRewards,
     }
-  }, [isConnected, address, contractStats.streak, currentUserStats, cachedStats])
+  }, [
+    isConnected,
+    address,
+    contractStreak,
+    userStatsValues.totalWins,
+    userStatsValues.currentStreak,
+    userStatsValues.longestStreak,
+    userStatsValues.totalRewardsEarned,
+    cachedStats,
+  ])
 
-  const refetch = () => {
+  // Refetch functions from wagmi/react-query are stable, so we don't need them in deps
+  const refetch = useCallback(() => {
     contractStats.refetch()
     refetchLeaderboard()
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const isLoading = (isConnected && contractStats.isLoading) || isLeaderboardLoading
 

@@ -6,6 +6,7 @@ import { getContractAddresses, getActiveChainId } from '@/lib/contracts/config'
 import EduWordleABI from '@/lib/contracts/EduWordle.json'
 import { formatUnits } from 'viem'
 import { type Address } from 'viem'
+import { useCallback } from 'react'
 
 /**
  * Hook to fetch user stats from the EduWordle contract
@@ -81,13 +82,13 @@ export function useUserStats() {
     ? parseFloat(formatUnits(rewardAmount as bigint, 18)).toFixed(2)
     : '0.00'
 
-  // Refetch all stats
-  const refetchAll = () => {
+  // Refetch all stats - memoized to prevent infinite loops
+  const refetchAll = useCallback(() => {
     refetchStreak()
     refetchHasClaimed()
     refetchHintsPurchased()
     refetchRewardAmount()
-  }
+  }, [refetchStreak, refetchHasClaimed, refetchHintsPurchased, refetchRewardAmount])
 
   return {
     streak: streak ? Number(streak) : 0,
