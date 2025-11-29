@@ -253,11 +253,8 @@ export default function PlayPage() {
       return
     }
 
-    if (!dailyWord) {
-      setMessage('Daily word not available yet. Please try again in a moment.')
-      setTimeout(() => setMessage(''), 2000)
-      return
-    }
+    // Note: dailyWord is optional - contract validates the guess
+    // If word file isn't available, we can still play
 
     // STRICT CHECK: Contract state is source of truth - block if claimed
     const claimed = Boolean(hasClaimed)
@@ -293,11 +290,8 @@ export default function PlayPage() {
       return
     }
 
-    if (!dailyWord || dailyWord.length !== WORD_LENGTH) {
-      setMessage('Daily word not configured')
-      setTimeout(() => setMessage(''), 2000)
-      return
-    }
+    // Note: dailyWord is optional - contract is source of truth
+    // We can still play without it (word is just for UI feedback)
 
     // CRITICAL: Only allow play if puzzle is initialized on contract
     if (!isInitialized) {
@@ -306,8 +300,12 @@ export default function PlayPage() {
       return
     }
 
-    // Check guess locally for UI feedback
-    const guessResult = checkGuess(currentGuess, dailyWord)
+    // Check guess locally for UI feedback (if dailyWord is available)
+    // If not available, we'll still submit to contract (contract is source of truth)
+    const guessResult = dailyWord ? checkGuess(currentGuess, dailyWord) : Array(WORD_LENGTH).fill(null).map((_, idx) => ({
+      letter: currentGuess[idx] || '',
+      status: 'empty' as const
+    }))
     const newTiles = [...tiles, guessResult]
     setTiles(newTiles)
 
@@ -463,26 +461,9 @@ export default function PlayPage() {
     )
   }
 
-  if (!dailyWord) {
-    return (
-      <div className="space-y-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Today's Challenge</h1>
-          <p className="text-muted-foreground mb-4">
-            {dailyWordError
-              ? dailyWordError
-              : 'Unable to load today’s word file. Please refresh or contact the administrator.'}
-          </p>
-          <button
-            onClick={refetchDailyWord}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    )
-  }
+  // Note: dailyWord is optional - contract is the source of truth
+  // If word file isn't available, we can still play (word is just for UI feedback)
+  // The contract validates the actual guess
 
   if (!isInitialized) {
     return (

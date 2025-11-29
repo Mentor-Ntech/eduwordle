@@ -45,10 +45,10 @@ export default function DashboardPage() {
               Status:{' '}
               {isDailyWordLoading ? (
                 <span className="text-muted-foreground">Loading…</span>
-              ) : dailyWordError ? (
-                <span className="text-warning-foreground">Failed to load daily word</span>
-              ) : (
+              ) : dailyWord ? (
                 <span className="text-success">Ready</span>
+              ) : (
+                <span className="text-muted-foreground">Using contract data</span>
               )}
             </p>
             <p>

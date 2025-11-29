@@ -20,33 +20,47 @@ export function useDailyWord() {
   const fetchWord = useCallback(async () => {
     setIsLoading(true)
     setError(null)
+    
+    // First, try to fetch from JSON file
     try {
       const response = await fetch(`/daily-word.json?ts=${Date.now()}`, {
         cache: 'no-store',
       })
-      if (!response.ok) {
-        throw new Error(`Failed to fetch daily word (status ${response.status})`)
+      if (response.ok) {
+        const payload: DailyWordPayload = await response.json()
+        const nextWord = payload.word?.toUpperCase().trim() ?? ''
+        if (nextWord) {
+          setWord(nextWord)
+          setDate(payload.date)
+          setHash(payload.hash)
+          setUpdatedAt(payload.updatedAt)
+          setIsLoading(false)
+          return
+        }
       }
-      const payload: DailyWordPayload = await response.json()
-      const nextWord = payload.word?.toUpperCase().trim() ?? ''
-      if (!nextWord) {
-        throw new Error('Daily word payload is missing the word field')
-      }
-      setWord(nextWord)
-      setDate(payload.date)
-      setHash(payload.hash)
-      setUpdatedAt(payload.updatedAt)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to load daily word'
-      setError(message)
-      setWord('')
-      setDate(undefined)
-      setHash(undefined)
-      setUpdatedAt(undefined)
-    } finally {
-      setIsLoading(false)
+      // Silently fail and try fallback
+      console.debug('Daily word JSON not available, using fallback')
     }
+    
+    // Fallback to environment variable
+    const envWord = process.env.NEXT_PUBLIC_DAILY_WORD?.toUpperCase().trim()
+    if (envWord && envWord.length === 5) {
+      setWord(envWord)
+      setDate(new Date().toISOString().split('T')[0])
+      setHash(undefined) // Hash not available from env
+      setUpdatedAt(new Date().toISOString())
+      setIsLoading(false)
+      return
+    }
+    
+    // If neither is available, it's not an error - just no word available
+    // The contract is the source of truth anyway
+    setWord('')
+    setDate(undefined)
+    setHash(undefined)
+    setUpdatedAt(undefined)
+    setIsLoading(false)
   }, [])
 
   useEffect(() => {

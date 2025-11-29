@@ -22,8 +22,10 @@ export function GameStatus({ status, word, guessCount, onPlayAgain, canReplay = 
         <p className="text-lg text-muted-foreground">
           {isWon 
             ? `Great job! You guessed it in ${guessCount} ${guessCount === 1 ? 'try' : 'tries'}.`
-            : `The word was: `}
-          {!isWon && <span className="font-bold text-foreground">{word}</span>}
+            : word 
+              ? `The word was: `
+              : `Better luck next time!`}
+          {!isWon && word && <span className="font-bold text-foreground">{word}</span>}
         </p>
       </div>
 
