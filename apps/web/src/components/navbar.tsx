@@ -71,7 +71,7 @@ export function Navbar() {
           </Link>
         </div>
         
-        {/* Desktop navigation */}
+        {/* Desktop navigation - hidden on mobile */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
@@ -90,7 +90,7 @@ export function Navbar() {
             </Link>
           ))}
           
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <WalletConnectButton />
           </div>
         </nav>
