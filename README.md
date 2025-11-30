@@ -2,6 +2,8 @@
 
 A decentralized vocabulary game built on the Celo blockchain that rewards players with cUSD stablecoins for solving daily word puzzles. **Successfully tested with MiniPay using ngrok for mobile testing.**
 
+![Screenshot of the testing page](/apps/web/public/eduworldu.jpeg)
+
 ## Introduction
 
 EduWordle is a mobile-first, educational word puzzle game that combines the fun of Wordle with real cryptocurrency rewards. Players solve a daily five-letter word puzzle and earn Celo Dollar (cUSD) stablecoins when they get the answer correct. The game runs entirely on the Celo blockchain, ensuring transparency and fairness, while providing an engaging way to learn new vocabulary.
